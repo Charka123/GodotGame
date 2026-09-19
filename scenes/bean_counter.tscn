@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/bean_counter.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/bean.svg" id="2_bean"]
+
+[node name="BeanCounter" type="HBoxContainer"]
+offset_left = 72.0
+offset_top = 20.0
+offset_right = 240.0
+offset_bottom = 56.0
+mouse_filter = 2
+theme_override_constants/separation = 10
+script = ExtResource("1_script")
+
+[node name="BeanIcon" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("2_bean")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Balance" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "200 bean"
+vertical_alignment = 1

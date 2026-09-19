@@ -1,8 +1,13 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/grid_board.tscn" id="1_board"]
+[ext_resource type="PackedScene" path="res://scenes/bean_counter.tscn" id="2_counter"]
 
 [node name="Main" type="Node2D"]
 
 [node name="GridBoard" parent="." instance=ExtResource("1_board")]
 position = Vector2(72, 72)
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="BeanCounter" parent="HUD" instance=ExtResource("2_counter")]
