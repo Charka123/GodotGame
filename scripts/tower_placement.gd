@@ -3,6 +3,7 @@ extends Node2D
 
 const BoardLayout = preload("res://scripts/grid_board.gd")
 const TOWER_SCENE = preload("res://scenes/tower.tscn")
+const TOWER_COST := 50
 
 var selected_cell := Vector2i.ZERO
 var menu_cell := Vector2i.ZERO
@@ -24,6 +25,15 @@ func _ready() -> void:
 	place_button.focus_neighbor_bottom = place_button.get_path_to(cancel_button)
 	cancel_button.focus_neighbor_top = cancel_button.get_path_to(place_button)
 	cancel_button.focus_neighbor_bottom = cancel_button.get_path_to(place_button)
+	place_button.text = "Place tower (%d bean)" % TOWER_COST
+	Economy.beans_changed.connect(_update_affordability)
+	_update_affordability(Economy.beans)
+
+
+func _update_affordability(amount: int) -> void:
+	place_button.disabled = amount < TOWER_COST
+	if menu.visible and place_button.disabled:
+		cancel_button.grab_focus()
 
 
 func _setup_controller_bindings() -> void:
@@ -129,7 +139,10 @@ func _open_menu(cell: Vector2i) -> void:
 	var cell_corner := Vector2(cell + Vector2i.ONE) * BoardLayout.CELL_SIZE
 	menu.position = cell_corner.clamp(Vector2.ZERO, BoardLayout.BOARD_SIZE - menu.size)
 	menu.show()
-	place_button.grab_focus()
+	if place_button.disabled:
+		cancel_button.grab_focus()
+	else:
+		place_button.grab_focus()
 
 
 func _close_menu() -> void:
@@ -139,7 +152,7 @@ func _close_menu() -> void:
 
 
 func _place_tower() -> void:
-	if _can_place(menu_cell):
+	if _can_place(menu_cell) and Economy.spend_beans(TOWER_COST):
 		var tower := TOWER_SCENE.instantiate() as Node2D
 		tower.position = (Vector2(menu_cell) + Vector2(0.5, 0.5)) * BoardLayout.CELL_SIZE
 		towers.add_child(tower)
