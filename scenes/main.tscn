@@ -11,3 +11,13 @@ position = Vector2(72, 72)
 [node name="HUD" type="CanvasLayer" parent="."]
 
 [node name="BeanCounter" parent="HUD" instance=ExtResource("2_counter")]
+
+[node name="PlacementHelp" type="Label" parent="HUD"]
+offset_left = 72.0
+offset_top = 660.0
+offset_right = 648.0
+offset_bottom = 706.0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 14
+text = "Right-click a cell to place a tower. Shaded lane is blocked.
+Controller: D-pad / stick to move · A / Cross to select · B / Circle to cancel"

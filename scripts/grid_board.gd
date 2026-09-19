@@ -5,10 +5,21 @@ extends Node2D
 const GRID_SIZE := Vector2i(12, 12)
 const CELL_SIZE := 48
 const BOARD_SIZE := Vector2(GRID_SIZE) * CELL_SIZE
+const LANE_START_ROW := 5
+const LANE_END_ROW := 6
+
+
+static func is_lane_cell(cell: Vector2i) -> bool:
+	return cell.y >= LANE_START_ROW and cell.y <= LANE_END_ROW
 
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, BOARD_SIZE), Color("202b38"))
+	draw_rect(
+		Rect2(0, LANE_START_ROW * CELL_SIZE, BOARD_SIZE.x,
+			(LANE_END_ROW - LANE_START_ROW + 1) * CELL_SIZE),
+		Color("514332")
+	)
 
 	for column in range(GRID_SIZE.x + 1):
 		var x := float(column * CELL_SIZE)
