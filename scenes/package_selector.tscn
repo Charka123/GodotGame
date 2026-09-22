@@ -1,0 +1,82 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/package_selector.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/production_package.svg" id="Production"]
+[ext_resource type="Texture2D" path="res://assets/attack_package.svg" id="Attack"]
+[ext_resource type="Texture2D" path="res://assets/freeze_package.svg" id="Freeze"]
+[ext_resource type="Texture2D" path="res://assets/block_package.svg" id="Block"]
+
+[sub_resource type="StyleBoxFlat" id="Style_selected"]
+bg_color = Color(0.19, 0.32, 0.29, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.66, 0.9, 0.8, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+content_margin_left = 6.0
+content_margin_right = 6.0
+
+[node name="PackageSelector" type="HBoxContainer"]
+offset_left = 174.0
+offset_top = 8.0
+offset_right = 708.0
+offset_bottom = 64.0
+mouse_filter = 2
+theme_override_constants/separation = 4
+script = ExtResource("1_script")
+
+[node name="Production" type="Button" parent="."]
+custom_minimum_size = Vector2(130, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Production: 0 bean. Select with 1; controller Y / Triangle cycles packages. Selection only."
+theme_override_font_sizes/font_size = 12
+theme_override_constants/icon_max_width = 32
+theme_override_styles/pressed = SubResource("Style_selected")
+toggle_mode = true
+text = "Production [1]
+0 bean"
+icon = ExtResource("Production")
+
+[node name="Attack" type="Button" parent="."]
+custom_minimum_size = Vector2(130, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Attack: 50 bean. Select with 2; controller Y / Triangle cycles packages. Selection only."
+theme_override_font_sizes/font_size = 12
+theme_override_constants/icon_max_width = 32
+theme_override_styles/pressed = SubResource("Style_selected")
+toggle_mode = true
+text = "Attack [2]
+50 bean"
+icon = ExtResource("Attack")
+
+[node name="Freeze" type="Button" parent="."]
+custom_minimum_size = Vector2(130, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Freeze: 100 bean. Select with 3; controller Y / Triangle cycles packages. Selection only."
+theme_override_font_sizes/font_size = 12
+theme_override_constants/icon_max_width = 32
+theme_override_styles/pressed = SubResource("Style_selected")
+toggle_mode = true
+text = "Freeze [3]
+100 bean"
+icon = ExtResource("Freeze")
+
+[node name="Block" type="Button" parent="."]
+custom_minimum_size = Vector2(130, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Block: 25 bean. Select with 4; controller Y / Triangle cycles packages. Selection only."
+theme_override_font_sizes/font_size = 12
+theme_override_constants/icon_max_width = 32
+theme_override_styles/pressed = SubResource("Style_selected")
+toggle_mode = true
+text = "Block [4]
+25 bean"
+icon = ExtResource("Block")

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/grid_board.tscn" id="1_board"]
 [ext_resource type="PackedScene" path="res://scenes/bean_counter.tscn" id="2_counter"]
+[ext_resource type="PackedScene" path="res://scenes/package_selector.tscn" id="3_packages"]
 
 [node name="Main" type="Node2D"]
 
@@ -11,6 +12,10 @@ position = Vector2(72, 72)
 [node name="HUD" type="CanvasLayer" parent="."]
 
 [node name="BeanCounter" parent="HUD" instance=ExtResource("2_counter")]
+offset_left = 12.0
+offset_right = 164.0
+
+[node name="PackageSelector" parent="HUD" instance=ExtResource("3_packages")]
 
 [node name="PlacementHelp" type="Label" parent="HUD"]
 offset_left = 72.0
