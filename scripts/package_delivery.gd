@@ -1,5 +1,5 @@
 extends Node
-## All supported packages travel first and resolve once, at their stopping tower.
+## Block applies directly; other supported packages travel before resolving once.
 
 signal package_resolved(package: StringName, cell: Vector2i)
 
@@ -8,8 +8,10 @@ const PACKAGES := {
 	&"block": {"cost": 25, "icon": preload("res://assets/block_package.svg")},
 }
 const PASS_SECONDS := 0.25
+const COOLDOWN_SECONDS := 15.0
 
 var delivering := false
+var cooldowns: Dictionary = {&"production": 0.0, &"block": 0.0}
 
 @onready var board = $"../GridBoard/TowerPlacement"
 @onready var selector = $"../HUD/PackageSelector"
@@ -19,6 +21,13 @@ func _ready() -> void:
 	board.tower_selected.connect(_on_tower_selected)
 
 
+func _process(delta: float) -> void:
+	for package in cooldowns:
+		if cooldowns[package] > 0.0:
+			cooldowns[package] = maxf(0.0, cooldowns[package] - delta)
+			selector.update_cooldown(package, cooldowns[package])
+
+
 func _on_tower_selected(cell: Vector2i) -> void:
 	deliver_package(selector.selected_package, cell)
 
@@ -26,10 +35,19 @@ func _on_tower_selected(cell: Vector2i) -> void:
 func deliver_package(package: StringName, cell: Vector2i) -> void:
 	if delivering or not PACKAGES.has(package) or not board.occupied_cells.has(cell):
 		return
+	if cooldowns[package] > 0.0:
+		return
 	if not Economy.spend_beans(PACKAGES[package].cost):
 		return
 	delivering = true
 	selector.clear_selection()
+	cooldowns[package] = COOLDOWN_SECONDS
+	selector.update_cooldown(package, COOLDOWN_SECONDS)
+	if package == &"block":
+		board.occupied_cells[cell].apply_block()
+		delivering = false
+		package_resolved.emit(package, cell)
+		return
 	var parcel := Sprite2D.new()
 	parcel.texture = PACKAGES[package].icon
 	parcel.scale = Vector2(0.65, 0.65)
@@ -52,8 +70,6 @@ func deliver_package(package: StringName, cell: Vector2i) -> void:
 		&"production":
 			Economy.add_beans(100)
 			tower.show_production()
-		&"block":
-			tower.apply_block()
 	parcel.queue_free()
 	delivering = false
 	package_resolved.emit(package, cell)
