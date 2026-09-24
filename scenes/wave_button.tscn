@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/wave_button.gd" id="1_script"]
+
+[sub_resource type="InputEventKey" id="Key_start"]
+physical_keycode = 78
+
+[sub_resource type="InputEventJoypadButton" id="Joy_start"]
+button_index = 6
+
+[sub_resource type="Shortcut" id="Shortcut_start"]
+events = [SubResource("Key_start"), SubResource("Joy_start")]
+
+[node name="WaveButton" type="Button"]
+offset_left = 428.0
+offset_top = 712.0
+offset_right = 648.0
+offset_bottom = 756.0
+tooltip_text = "Start a wave (N / controller Start). Wave spawning is not implemented yet."
+text = "Start Wave  [N / Start]"
+shortcut = SubResource("Shortcut_start")
+script = ExtResource("1_script")

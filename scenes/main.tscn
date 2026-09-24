@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/grid_board.tscn" id="1_board"]
 [ext_resource type="PackedScene" path="res://scenes/bean_counter.tscn" id="2_counter"]
 [ext_resource type="PackedScene" path="res://scenes/package_selector.tscn" id="3_packages"]
 [ext_resource type="Script" path="res://scripts/package_delivery.gd" id="4_delivery"]
+[ext_resource type="PackedScene" path="res://scenes/wave_button.tscn" id="5_wave_button"]
 
 [node name="Main" type="Node2D"]
 
@@ -20,6 +21,8 @@ offset_left = 12.0
 offset_right = 164.0
 
 [node name="PackageSelector" parent="HUD" instance=ExtResource("3_packages")]
+
+[node name="WaveButton" parent="HUD" instance=ExtResource("5_wave_button")]
 
 [node name="PlacementHelp" type="Label" parent="HUD"]
 offset_left = 72.0

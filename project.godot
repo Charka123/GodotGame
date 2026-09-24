@@ -22,7 +22,7 @@ Economy="*res://scripts/economy.gd"
 [display]
 
 window/size/viewport_width=720
-window/size/viewport_height=720
+window/size/viewport_height=768
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
