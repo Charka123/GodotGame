@@ -1,7 +1,13 @@
 extends HBoxContainer
-## Selection only. Package application and effects will be added later.
+## Choose one package for delivery to a tower.
 
 var selected_package: StringName = &""
+
+
+func clear_selection() -> void:
+	selected_package = &""
+	for button in package_buttons:
+		button.set_pressed_no_signal(false)
 
 @onready var package_buttons: Array[Button] = [$Production, $Attack, $Freeze, $Block]
 

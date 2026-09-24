@@ -1,8 +1,17 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/tower.svg" id="1_texture"]
+[ext_resource type="Script" path="res://scripts/tower.gd" id="2_script"]
+[ext_resource type="Texture2D" path="res://assets/block_package.svg" id="3_block"]
 
 [node name="Tower" type="Node2D"]
+script = ExtResource("2_script")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_texture")
+
+[node name="BlockMarker" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(14, -14)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_block")

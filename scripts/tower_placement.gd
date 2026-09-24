@@ -1,5 +1,7 @@
 extends Node2D
-## Mouse and controller placement only; placed towers have no behavior.
+## Board navigation, tower placement, and targeting existing towers.
+
+signal tower_selected(cell: Vector2i)
 
 const BoardLayout = preload("res://scripts/grid_board.gd")
 const TOWER_SCENE = preload("res://scenes/tower.tscn")
@@ -89,6 +91,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		if direction_value == 0:
 			return
 	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			var local_position: Vector2 = get_global_transform_with_canvas().affine_inverse() * event.position
+			var cell := Vector2i((local_position / BoardLayout.CELL_SIZE).floor())
+			if occupied_cells.has(cell):
+				tower_selected.emit(cell)
+				get_viewport().set_input_as_handled()
 		if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
 			var local_position: Vector2 = get_global_transform_with_canvas().affine_inverse() * event.position
 			var cell := Vector2i((local_position / BoardLayout.CELL_SIZE).floor())
@@ -111,7 +119,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		direction = Vector2i.DOWN
 	elif event.is_action_pressed("ui_accept"):
 		cursor_visible = true
-		_open_menu(selected_cell)
+		if occupied_cells.has(selected_cell):
+			tower_selected.emit(selected_cell)
+		else:
+			_open_menu(selected_cell)
 		queue_redraw()
 		get_viewport().set_input_as_handled()
 		return
