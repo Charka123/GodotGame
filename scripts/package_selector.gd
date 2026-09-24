@@ -1,8 +1,11 @@
 extends HBoxContainer
 ## Choose one package for delivery to a tower.
 
+const PACKAGE_COSTS := {&"production": 0, &"attack": 50, &"freeze": 100, &"block": 25}
+
 var selected_package: StringName = &""
 var original_labels: Dictionary = {}
+var cooldown_remaining: Dictionary = {}
 
 
 func clear_selection() -> void:
@@ -17,14 +20,26 @@ func _ready() -> void:
 	for button in package_buttons:
 		original_labels[button] = button.text
 		button.toggled.connect(_on_package_toggled.bind(button))
+	Economy.beans_changed.connect(_on_beans_changed)
+	_refresh_buttons()
 
 
 func update_cooldown(package: StringName, remaining: float) -> void:
+	cooldown_remaining[package] = remaining
+	_refresh_buttons()
+
+
+func _on_beans_changed(_amount: int) -> void:
+	_refresh_buttons()
+
+
+func _refresh_buttons() -> void:
 	for button in package_buttons:
-		if StringName(button.name.to_lower()) != package:
-			continue
-		button.disabled = remaining > 0.0
-		button.text = "%s\n%ds" % [button.name, ceili(remaining)] if button.disabled else original_labels[button]
+		var package := StringName(button.name.to_lower())
+		var remaining: float = cooldown_remaining.get(package, 0.0)
+		button.disabled = remaining > 0.0 or Economy.beans < PACKAGE_COSTS[package]
+		button.modulate = Color(0.55, 0.55, 0.55) if button.disabled else Color.WHITE
+		button.text = "%s\n%ds" % [button.name, ceili(remaining)] if remaining > 0.0 else original_labels[button]
 		if button.disabled and button.button_pressed:
 			clear_selection()
 
