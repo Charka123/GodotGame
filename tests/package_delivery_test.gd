@@ -22,6 +22,7 @@ func _run() -> void:
 		board.menu_cell = Vector2i(column, 0)
 		board._place_tower()
 	assert(economy.beans == 0)
+	main.get_node("WaveController").start_wave()
 	selector.get_node("Production").button_pressed = true
 	board.selected_cell = Vector2i.ZERO
 	var accept := InputEventJoypadButton.new()
@@ -75,7 +76,7 @@ func _run() -> void:
 	assert(endpoints.back() == Vector2i(4, 0), "A lone endpoint resolves locally")
 	var balance: int = economy.beans
 	delivery.deliver_package(&"production", Vector2i(5, 0))
-	delivery.deliver_package(&"freeze", Vector2i.ZERO)
+	delivery.deliver_package(&"unknown", Vector2i.ZERO)
 	assert(not delivery.delivering)
 	assert(economy.beans == balance)
 	economy.beans = 24

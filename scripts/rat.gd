@@ -6,14 +6,28 @@ const MAX_HEALTH := 25
 const SPEED := 48.0 / 3.0
 var health := MAX_HEALTH
 var finished := false
+var freeze_remaining := 0.0
 
 
 func advance(delta: float) -> void:
 	if finished:
 		return
+	if freeze_remaining > 0.0:
+		var frozen_time := minf(delta, freeze_remaining)
+		freeze_remaining = maxf(0.0, freeze_remaining - frozen_time)
+		delta -= frozen_time
+		if freeze_remaining == 0.0:
+			modulate = Color.WHITE
 	position.x += SPEED * delta
 	if position.x >= 576.0:
 		_finish(true)
+
+
+func freeze(duration: float) -> void:
+	if finished:
+		return
+	freeze_remaining = maxf(freeze_remaining, duration)
+	modulate = Color(0.45, 0.8, 1.0)
 
 
 func take_damage(amount: int) -> void:

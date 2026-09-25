@@ -4,15 +4,16 @@ extends Node
 signal package_resolved(package: StringName, cell: Vector2i)
 
 const PACKAGES := {
+	&"freeze": {"cost": 100, "icon": preload("res://assets/freeze_package.svg")},
 	&"attack": {"cost": 50, "icon": preload("res://assets/attack_package.svg")},
 	&"production": {"cost": 0, "icon": preload("res://assets/production_package.svg")},
 	&"block": {"cost": 25, "icon": preload("res://assets/block_package.svg")},
 }
 const PASS_SECONDS := 0.25
-const COOLDOWN_SECONDS := 15.0
+const COOLDOWN_SECONDS := {&"production": 15.0, &"block": 15.0, &"attack": 5.0, &"freeze": 20.0}
 
 var delivering := false
-var cooldowns: Dictionary = {&"production": 0.0, &"block": 0.0}
+var cooldowns: Dictionary = {&"production": 0.0, &"block": 0.0, &"attack": 0.0, &"freeze": 0.0}
 
 @onready var board = $"../GridBoard/TowerPlacement"
 @onready var selector = $"../HUD/PackageSelector"
@@ -34,6 +35,8 @@ func _on_tower_selected(cell: Vector2i) -> void:
 
 
 func deliver_package(package: StringName, cell: Vector2i) -> void:
+	if not $"../WaveController".active or $"../GridBoard/GoalFlag".is_defeated:
+		return
 	if delivering or not PACKAGES.has(package) or not board.occupied_cells.has(cell):
 		return
 	if cooldowns.get(package, 0.0) > 0.0:
@@ -43,8 +46,8 @@ func deliver_package(package: StringName, cell: Vector2i) -> void:
 	delivering = true
 	selector.clear_selection()
 	if cooldowns.has(package):
-		cooldowns[package] = COOLDOWN_SECONDS
-		selector.update_cooldown(package, COOLDOWN_SECONDS)
+		cooldowns[package] = COOLDOWN_SECONDS[package]
+		selector.update_cooldown(package, cooldowns[package])
 	if package == &"block":
 		board.occupied_cells[cell].apply_block()
 		delivering = false
@@ -69,6 +72,8 @@ func deliver_package(package: StringName, cell: Vector2i) -> void:
 		cell = next_cell
 	var tower = board.occupied_cells[cell]
 	match package:
+		&"freeze":
+			$"../WaveController".apply_freeze()
 		&"attack":
 			$"../WaveController".apply_attack(cell.x)
 		&"production":

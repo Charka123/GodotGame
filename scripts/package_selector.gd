@@ -6,6 +6,7 @@ const PACKAGE_COSTS := {&"production": 0, &"attack": 50, &"freeze": 100, &"block
 var selected_package: StringName = &""
 var original_labels: Dictionary = {}
 var cooldown_remaining: Dictionary = {}
+var wave_active := false
 
 
 func clear_selection() -> void:
@@ -21,6 +22,14 @@ func _ready() -> void:
 		original_labels[button] = button.text
 		button.toggled.connect(_on_package_toggled.bind(button))
 	Economy.beans_changed.connect(_on_beans_changed)
+	var wave = get_node("../../WaveController")
+	wave.active_changed.connect(_on_wave_active_changed)
+	wave_active = wave.active
+	_refresh_buttons()
+
+
+func _on_wave_active_changed(in_progress: bool) -> void:
+	wave_active = in_progress
 	_refresh_buttons()
 
 
@@ -37,7 +46,7 @@ func _refresh_buttons() -> void:
 	for button in package_buttons:
 		var package := StringName(button.name.to_lower())
 		var remaining: float = cooldown_remaining.get(package, 0.0)
-		button.disabled = remaining > 0.0 or Economy.beans < PACKAGE_COSTS[package]
+		button.disabled = not wave_active or remaining > 0.0 or Economy.beans < PACKAGE_COSTS[package]
 		button.modulate = Color(0.55, 0.55, 0.55) if button.disabled else Color.WHITE
 		button.text = "%s\n%ds" % [button.name, ceili(remaining)] if remaining > 0.0 else original_labels[button]
 		if button.disabled and button.button_pressed:

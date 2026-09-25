@@ -1,6 +1,8 @@
 extends Node
 ## Only wave one is defined. Future waves can reuse the button and rat scene.
 
+signal active_changed(in_progress: bool)
+
 const RAT = preload("res://scenes/rat.tscn")
 const MOB_COUNT := 5
 const SPAWN_INTERVAL := 1.5
@@ -25,6 +27,7 @@ func start_wave() -> void:
 	if active or completed or flag.is_defeated:
 		return
 	active = true
+	active_changed.emit(true)
 	remaining = MOB_COUNT
 	button.disabled = true
 	button.text = "Wave 1 in progress"
@@ -58,6 +61,7 @@ func _on_mob_resolved(escaped: bool) -> void:
 		flag.register_mob_passed()
 	if remaining == 0:
 		active = false
+		active_changed.emit(false)
 		completed = true
 		button.text = "Wave 1 complete"
 		button.tooltip_text = "No further waves defined yet."
@@ -71,3 +75,8 @@ func apply_attack(column: int) -> void:
 		var distance := absi(mob_column - column)
 		if distance <= 1:
 			mob.take_damage(20 if distance == 0 else 10)
+
+
+func apply_freeze() -> void:
+	for mob in mobs.get_children():
+		mob.freeze(8.0)
