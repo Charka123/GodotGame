@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/grid_board.gd" id="1_grid"]
 [ext_resource type="PackedScene" path="res://scenes/tower_placement.tscn" id="2_placement"]
+[ext_resource type="PackedScene" path="res://scenes/goal_flag.tscn" id="3_flag"]
 
 [sub_resource type="Curve2D" id="Curve2D_enemy_path"]
 _data = {
@@ -24,3 +25,6 @@ end_cap_mode = 2
 antialiased = true
 
 [node name="TowerPlacement" parent="." instance=ExtResource("2_placement")]
+
+[node name="GoalFlag" parent="." instance=ExtResource("3_flag")]
+position = Vector2(576, 288)

@@ -55,7 +55,7 @@ func deliver_package(package: StringName, cell: Vector2i) -> void:
 	board.add_child(parcel)
 	parcel.position = board.occupied_cells[cell].position + Vector2(0, -22)
 	# Leave a moment to see the package even when the starting tower is the endpoint.
-	await get_tree().create_timer(PASS_SECONDS).timeout
+	await get_tree().create_timer(PASS_SECONDS, false).timeout
 	while not board.occupied_cells[cell].blocks_packages:
 		var next_cell := cell + Vector2i.RIGHT
 		if not board.occupied_cells.has(next_cell):

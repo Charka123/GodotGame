@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/goal_flag.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/goal_flag.svg" id="2_flag"]
+
+[node name="GoalFlag" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_flag")
+offset = Vector2(12, -26)
+
+[node name="Counter" type="Label" parent="."]
+offset_left = -24.0
+offset_top = 10.0
+offset_right = 32.0
+offset_bottom = 30.0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 14
+text = "10"
+horizontal_alignment = 1
