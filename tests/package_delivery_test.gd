@@ -75,7 +75,6 @@ func _run() -> void:
 	assert(endpoints.back() == Vector2i(4, 0), "A lone endpoint resolves locally")
 	var balance: int = economy.beans
 	delivery.deliver_package(&"production", Vector2i(5, 0))
-	delivery.deliver_package(&"attack", Vector2i.ZERO)
 	delivery.deliver_package(&"freeze", Vector2i.ZERO)
 	assert(not delivery.delivering)
 	assert(economy.beans == balance)

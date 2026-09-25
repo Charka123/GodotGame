@@ -1,5 +1,5 @@
 extends Button
-## UI hook for a future wave controller. No spawning or wave state yet.
+## Requests the next available wave from the wave controller.
 
 signal wave_requested
 

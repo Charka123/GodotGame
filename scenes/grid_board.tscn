@@ -28,3 +28,5 @@ antialiased = true
 
 [node name="GoalFlag" parent="." instance=ExtResource("3_flag")]
 position = Vector2(576, 288)
+
+[node name="Mobs" type="Node2D" parent="."]

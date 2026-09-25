@@ -4,6 +4,7 @@ extends Node
 signal package_resolved(package: StringName, cell: Vector2i)
 
 const PACKAGES := {
+	&"attack": {"cost": 50, "icon": preload("res://assets/attack_package.svg")},
 	&"production": {"cost": 0, "icon": preload("res://assets/production_package.svg")},
 	&"block": {"cost": 25, "icon": preload("res://assets/block_package.svg")},
 }
@@ -35,14 +36,15 @@ func _on_tower_selected(cell: Vector2i) -> void:
 func deliver_package(package: StringName, cell: Vector2i) -> void:
 	if delivering or not PACKAGES.has(package) or not board.occupied_cells.has(cell):
 		return
-	if cooldowns[package] > 0.0:
+	if cooldowns.get(package, 0.0) > 0.0:
 		return
 	if not Economy.spend_beans(PACKAGES[package].cost):
 		return
 	delivering = true
 	selector.clear_selection()
-	cooldowns[package] = COOLDOWN_SECONDS
-	selector.update_cooldown(package, COOLDOWN_SECONDS)
+	if cooldowns.has(package):
+		cooldowns[package] = COOLDOWN_SECONDS
+		selector.update_cooldown(package, COOLDOWN_SECONDS)
 	if package == &"block":
 		board.occupied_cells[cell].apply_block()
 		delivering = false
@@ -67,6 +69,8 @@ func deliver_package(package: StringName, cell: Vector2i) -> void:
 		cell = next_cell
 	var tower = board.occupied_cells[cell]
 	match package:
+		&"attack":
+			$"../WaveController".apply_attack(cell.x)
 		&"production":
 			Economy.add_beans(100)
 			tower.show_production()

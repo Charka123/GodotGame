@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/grid_board.tscn" id="1_board"]
 [ext_resource type="PackedScene" path="res://scenes/bean_counter.tscn" id="2_counter"]
@@ -6,12 +6,16 @@
 [ext_resource type="Script" path="res://scripts/package_delivery.gd" id="4_delivery"]
 [ext_resource type="PackedScene" path="res://scenes/wave_button.tscn" id="5_wave_button"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="6_main"]
+[ext_resource type="Script" path="res://scripts/wave_controller.gd" id="7_wave"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("6_main")
 
 [node name="PackageDelivery" type="Node" parent="."]
 script = ExtResource("4_delivery")
+
+[node name="WaveController" type="Node" parent="."]
+script = ExtResource("7_wave")
 
 [node name="GridBoard" parent="." instance=ExtResource("1_board")]
 position = Vector2(72, 72)
