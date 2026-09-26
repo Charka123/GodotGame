@@ -1,0 +1,50 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/result_screen.gd" id="1_script"]
+
+[node name="ResultScreen" type="ColorRect"]
+process_mode = 3
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.035, 0.045, 0.065, 1)
+script = ExtResource("1_script")
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Content" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Title" type="Label" parent="Center/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Game Over"
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="Center/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "10 mobs reached your flag."
+horizontal_alignment = 1
+
+[node name="Misses" type="Label" parent="Center/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Misses: 10"
+horizontal_alignment = 1
+
+[node name="Restart" type="Button" parent="Center/Content"]
+custom_minimum_size = Vector2(300, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Restart"

@@ -2,6 +2,7 @@ extends Node
 ## Each defined wave waits for a separate player request.
 
 signal active_changed(in_progress: bool)
+signal all_waves_completed
 
 const RAT = preload("res://scenes/rat.tscn")
 const FAST_RAT = preload("res://scenes/fast_rat.tscn")
@@ -99,6 +100,8 @@ func _on_mob_resolved(escaped: bool) -> void:
 			button.disabled = true
 			button.text = "Wave %d complete" % wave_number
 			button.tooltip_text = "No further waves defined yet."
+			if wave_number == WAVES.size() and not flag.is_defeated:
+				all_waves_completed.emit()
 
 
 func apply_attack(column: int) -> void:

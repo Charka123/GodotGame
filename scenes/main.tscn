@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/grid_board.tscn" id="1_board"]
 [ext_resource type="PackedScene" path="res://scenes/bean_counter.tscn" id="2_counter"]
@@ -7,6 +7,9 @@
 [ext_resource type="PackedScene" path="res://scenes/wave_button.tscn" id="5_wave_button"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="6_main"]
 [ext_resource type="Script" path="res://scripts/wave_controller.gd" id="7_wave"]
+
+[ext_resource type="PackedScene" path="res://scenes/game_over_screen.tscn" id="8_loss"]
+[ext_resource type="PackedScene" path="res://scenes/win_screen.tscn" id="9_win"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("6_main")
@@ -40,23 +43,6 @@ theme_override_font_sizes/font_size = 14
 text = "Right-click: build · Select package, then click tower: deliver
 Controller: D-pad / stick: move · Y: package · A: use / build · B: close"
 
-[node name="LossOverlay" type="ColorRect" parent="HUD"]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.035, 0.045, 0.065, 0.88)
+[node name="LossOverlay" parent="HUD" instance=ExtResource("8_loss")]
 
-[node name="Message" type="Label" parent="HUD/LossOverlay"]
-layout_mode = 0
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 28
-text = "You lose\n10 mobs reached the flag"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="WinScreen" parent="HUD" instance=ExtResource("9_win")]
