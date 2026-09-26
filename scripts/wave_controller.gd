@@ -1,10 +1,10 @@
 extends Node
-## Only wave one is defined. Future waves can reuse the button and rat scene.
+## Each defined wave waits for a separate player request.
 
 signal active_changed(in_progress: bool)
 
 const RAT = preload("res://scenes/rat.tscn")
-const MOB_COUNT := 5
+const WAVE_COUNTS := [5, 7]
 const SPAWN_INTERVAL := 1.5
 const SPAWN_POSITION := Vector2(-96, 288)
 
@@ -13,6 +13,8 @@ var completed := false
 var elapsed := 0.0
 var spawned := 0
 var remaining := 0
+var wave_number := 0
+var mob_count := 0
 
 @onready var mobs: Node2D = $"../GridBoard/Mobs"
 @onready var flag = $"../GridBoard/GoalFlag"
@@ -24,13 +26,18 @@ func _ready() -> void:
 
 
 func start_wave() -> void:
-	if active or completed or flag.is_defeated:
+	if active or wave_number >= WAVE_COUNTS.size() or flag.is_defeated:
 		return
+	mob_count = WAVE_COUNTS[wave_number]
+	wave_number += 1
+	completed = false
+	elapsed = 0.0
+	spawned = 0
 	active = true
 	active_changed.emit(true)
-	remaining = MOB_COUNT
+	remaining = mob_count
 	button.disabled = true
-	button.text = "Wave 1 in progress"
+	button.text = "Wave %d in progress" % wave_number
 	_spawn_rat(0.0)
 
 
@@ -42,7 +49,7 @@ func _process(delta: float) -> void:
 		mob.advance(delta)
 		if flag.is_defeated:
 			return
-	while spawned < MOB_COUNT and elapsed >= spawned * SPAWN_INTERVAL:
+	while spawned < mob_count and elapsed >= spawned * SPAWN_INTERVAL and not flag.is_defeated:
 		_spawn_rat(elapsed - spawned * SPAWN_INTERVAL)
 
 
@@ -63,8 +70,14 @@ func _on_mob_resolved(escaped: bool) -> void:
 		active = false
 		active_changed.emit(false)
 		completed = true
-		button.text = "Wave 1 complete"
-		button.tooltip_text = "No further waves defined yet."
+		if wave_number < WAVE_COUNTS.size() and not flag.is_defeated:
+			button.disabled = false
+			button.text = "Start Wave %d [N / Start]" % (wave_number + 1)
+			button.tooltip_text = "Start wave %d: %d rats. N / controller Start." % [wave_number + 1, WAVE_COUNTS[wave_number]]
+		else:
+			button.disabled = true
+			button.text = "Wave %d complete" % wave_number
+			button.tooltip_text = "No further waves defined yet."
 
 
 func apply_attack(column: int) -> void:

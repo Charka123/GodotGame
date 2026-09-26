@@ -8,5 +8,6 @@ func _ready() -> void:
 func _on_defeated() -> void:
 	$HUD/PackageSelector.clear_selection()
 	$HUD/WaveButton.disabled = true
+	$GridBoard/TowerPlacement._close_menu()
 	$HUD/LossOverlay.show()
 	get_tree().paused = true

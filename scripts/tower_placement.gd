@@ -17,11 +17,13 @@ var stick_direction := Vector2i.ZERO
 @onready var menu: PanelContainer = $PlacementMenu
 @onready var place_button: Button = $PlacementMenu/Margin/Buttons/PlaceTower
 @onready var cancel_button: Button = $PlacementMenu/Margin/Buttons/Cancel
+@onready var remove_button: Button = $PlacementMenu/Margin/Buttons/RemoveBlock
 
 
 func _ready() -> void:
 	_setup_controller_bindings()
 	place_button.pressed.connect(_place_tower)
+	remove_button.pressed.connect(_remove_block)
 	cancel_button.pressed.connect(_close_menu)
 	place_button.focus_neighbor_top = place_button.get_path_to(cancel_button)
 	place_button.focus_neighbor_bottom = place_button.get_path_to(cancel_button)
@@ -34,7 +36,7 @@ func _ready() -> void:
 
 func _update_affordability(amount: int) -> void:
 	place_button.disabled = amount < TOWER_COST
-	if menu.visible and place_button.disabled:
+	if menu.visible and place_button.visible and place_button.disabled:
 		cancel_button.grab_focus()
 
 
@@ -120,7 +122,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("ui_accept"):
 		cursor_visible = true
 		if occupied_cells.has(selected_cell):
-			tower_selected.emit(selected_cell)
+			var selector = get_node_or_null("../../HUD/PackageSelector")
+			if selector == null or selector.selected_package == &"":
+				_open_menu(selected_cell)
+			else:
+				tower_selected.emit(selected_cell)
 		else:
 			_open_menu(selected_cell)
 		queue_redraw()
@@ -144,22 +150,39 @@ func _can_place(cell: Vector2i) -> bool:
 
 
 func _open_menu(cell: Vector2i) -> void:
-	if not _can_place(cell):
+	var tower = occupied_cells.get(cell)
+	var can_remove: bool = tower != null and tower.blocks_packages
+	if not _can_place(cell) and not can_remove:
 		return
+	place_button.visible = not can_remove
+	remove_button.visible = can_remove
+	var action_button: Button = remove_button if can_remove else place_button
+	action_button.focus_neighbor_top = action_button.get_path_to(cancel_button)
+	action_button.focus_neighbor_bottom = action_button.get_path_to(cancel_button)
+	cancel_button.focus_neighbor_top = cancel_button.get_path_to(action_button)
+	cancel_button.focus_neighbor_bottom = cancel_button.get_path_to(action_button)
 	menu_cell = cell
 	var cell_corner := Vector2(cell + Vector2i.ONE) * BoardLayout.CELL_SIZE
 	menu.position = cell_corner.clamp(Vector2.ZERO, BoardLayout.BOARD_SIZE - menu.size)
 	menu.show()
-	if place_button.disabled:
+	if action_button.disabled:
 		cancel_button.grab_focus()
 	else:
-		place_button.grab_focus()
+		action_button.grab_focus()
 
 
 func _close_menu() -> void:
 	place_button.release_focus()
+	remove_button.release_focus()
 	cancel_button.release_focus()
 	menu.hide()
+
+
+func _remove_block() -> void:
+	var tower = occupied_cells.get(menu_cell)
+	if tower != null and tower.blocks_packages:
+		tower.remove_block()
+	_close_menu()
 
 
 func _place_tower() -> void:

@@ -8,6 +8,11 @@ func apply_block() -> void:
 	$BlockMarker.show()
 
 
+func remove_block() -> void:
+	blocks_packages = false
+	$BlockMarker.hide()
+
+
 func show_production() -> void:
 	var label := Label.new()
 	label.text = "+100 bean"
