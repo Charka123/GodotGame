@@ -92,8 +92,26 @@ func _run() -> void:
 	for mob in mobs.get_children():
 		mob.take_damage(40)
 	await process_frame
+	assert(wave.completed and not wave.active and not button.disabled)
+	wave._process(60.0)
+	assert(wave.wave_number == 4 and mobs.get_child_count() == 0)
+	button.pressed.emit()
+	assert(wave.wave_number == 5 and wave.spawned == 1)
+	for interval in [1.5, 1.5, 1.5, 1.5, 1.0, 1.0, 1.0, 2.0, 2.0]:
+		wave._process(interval)
+		var last = mobs.get_child(mobs.get_child_count() - 1)
+		var previous = mobs.get_child(mobs.get_child_count() - 2)
+		assert(is_equal_approx(previous.position.x - last.position.x, 24.0))
+	assert(wave.spawned == 10 and mobs.get_child_count() == 10)
+	for i in range(10):
+		var expected_health := 25 if i < 4 else (15 if i < 7 else 40)
+		var expected_speed := 16.0 if i < 4 else (24.0 if i < 7 else 12.0)
+		assert(mobs.get_child(i).health == expected_health)
+		assert(mobs.get_child(i).speed == expected_speed)
+		mobs.get_child(i).take_damage(40)
+	await process_frame
 	assert(wave.completed and not wave.active and button.disabled)
 	wave.start_wave()
-	assert(wave.wave_number == 4 and mobs.get_child_count() == 0)
-	print("PASS: four manual waves, composition, spawn spacing, fast/tough stats, Freeze, damage, no undefined waves")
+	assert(wave.wave_number == 5 and mobs.get_child_count() == 0)
+	print("PASS: five manual waves, ordered composition, half-cell spacing, rat stats, Freeze, damage, no undefined waves")
 	quit()
