@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/rat.tscn" id="1_rat"]
+[ext_resource type="Texture2D" path="res://assets/tough_rat.svg" id="2_texture"]
+
+[node name="ToughRat" instance=ExtResource("1_rat")]
+max_health = 40
+speed = 12.0
+
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_texture")
+
+[node name="Health" parent="." index="1"]
+text = "40"
