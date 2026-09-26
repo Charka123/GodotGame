@@ -18,12 +18,14 @@ var stick_direction := Vector2i.ZERO
 @onready var place_button: Button = $PlacementMenu/Margin/Buttons/PlaceTower
 @onready var cancel_button: Button = $PlacementMenu/Margin/Buttons/Cancel
 @onready var remove_button: Button = $PlacementMenu/Margin/Buttons/RemoveBlock
+@onready var sell_button: Button = $PlacementMenu/Margin/Buttons/RemoveTower
 
 
 func _ready() -> void:
 	_setup_controller_bindings()
 	place_button.pressed.connect(_place_tower)
 	remove_button.pressed.connect(_remove_block)
+	sell_button.pressed.connect(_remove_tower)
 	cancel_button.pressed.connect(_close_menu)
 	place_button.focus_neighbor_top = place_button.get_path_to(cancel_button)
 	place_button.focus_neighbor_bottom = place_button.get_path_to(cancel_button)
@@ -152,15 +154,20 @@ func _can_place(cell: Vector2i) -> bool:
 func _open_menu(cell: Vector2i) -> void:
 	var tower = occupied_cells.get(cell)
 	var can_remove: bool = tower != null and tower.blocks_packages
-	if not _can_place(cell) and not can_remove:
+	if not _can_place(cell) and tower == null:
 		return
-	place_button.visible = not can_remove
+	place_button.visible = tower == null
 	remove_button.visible = can_remove
-	var action_button: Button = remove_button if can_remove else place_button
-	action_button.focus_neighbor_top = action_button.get_path_to(cancel_button)
-	action_button.focus_neighbor_bottom = action_button.get_path_to(cancel_button)
-	cancel_button.focus_neighbor_top = cancel_button.get_path_to(action_button)
-	cancel_button.focus_neighbor_bottom = cancel_button.get_path_to(action_button)
+	sell_button.visible = tower != null
+	var actions: Array[Button] = []
+	for button in [place_button, remove_button, sell_button, cancel_button]:
+		if button.visible:
+			actions.append(button)
+	for i in range(actions.size()):
+		actions[i].focus_neighbor_top = actions[i].get_path_to(actions[(i - 1 + actions.size()) % actions.size()])
+		actions[i].focus_neighbor_bottom = actions[i].get_path_to(actions[(i + 1) % actions.size()])
+	var action_button: Button = actions[0]
+	menu.size = menu.get_combined_minimum_size()
 	menu_cell = cell
 	var cell_corner := Vector2(cell + Vector2i.ONE) * BoardLayout.CELL_SIZE
 	menu.position = cell_corner.clamp(Vector2.ZERO, BoardLayout.BOARD_SIZE - menu.size)
@@ -174,6 +181,7 @@ func _open_menu(cell: Vector2i) -> void:
 func _close_menu() -> void:
 	place_button.release_focus()
 	remove_button.release_focus()
+	sell_button.release_focus()
 	cancel_button.release_focus()
 	menu.hide()
 
@@ -183,6 +191,16 @@ func _remove_block() -> void:
 	if tower != null and tower.blocks_packages:
 		tower.remove_block()
 	_close_menu()
+
+
+func _remove_tower() -> void:
+	var tower = occupied_cells.get(menu_cell)
+	if tower != null:
+		occupied_cells.erase(menu_cell)
+		tower.queue_free()
+		Economy.add_beans(25)
+	_close_menu()
+	queue_redraw()
 
 
 func _place_tower() -> void:

@@ -59,18 +59,28 @@ func deliver_package(package: StringName, cell: Vector2i) -> void:
 	parcel.z_index = 5
 	board.add_child(parcel)
 	parcel.position = board.occupied_cells[cell].position + Vector2(0, -22)
+	var tower = board.occupied_cells[cell]
 	# Leave a moment to see the package even when the starting tower is the endpoint.
 	await get_tree().create_timer(PASS_SECONDS, false).timeout
-	while not board.occupied_cells[cell].blocks_packages:
+	if not is_instance_valid(tower) or board.occupied_cells.get(cell) != tower:
+		parcel.queue_free()
+		delivering = false
+		return
+	while not tower.blocks_packages:
 		var next_cell := cell + Vector2i.RIGHT
 		if not board.occupied_cells.has(next_cell):
 			break
 		var destination: Vector2 = board.occupied_cells[next_cell].position + Vector2(0, -22)
+		var next_tower = board.occupied_cells[next_cell]
 		var tween := create_tween()
 		tween.tween_property(parcel, "position", destination, PASS_SECONDS)
 		await tween.finished
+		if not is_instance_valid(next_tower) or board.occupied_cells.get(next_cell) != next_tower:
+			parcel.queue_free()
+			delivering = false
+			return
 		cell = next_cell
-	var tower = board.occupied_cells[cell]
+		tower = next_tower
 	match package:
 		&"freeze":
 			$"../WaveController".apply_freeze()

@@ -7,6 +7,8 @@ const RAT = preload("res://scenes/rat.tscn")
 const WAVE_COUNTS := [5, 7]
 const SPAWN_INTERVAL := 1.5
 const SPAWN_POSITION := Vector2(-96, 288)
+const INCOME_INTERVAL := 15.0
+const INCOME_AMOUNT := 25
 
 var active := false
 var completed := false
@@ -15,6 +17,7 @@ var spawned := 0
 var remaining := 0
 var wave_number := 0
 var mob_count := 0
+var income_elapsed := 0.0
 
 @onready var mobs: Node2D = $"../GridBoard/Mobs"
 @onready var flag = $"../GridBoard/GoalFlag"
@@ -32,6 +35,7 @@ func start_wave() -> void:
 	wave_number += 1
 	completed = false
 	elapsed = 0.0
+	income_elapsed = 0.0
 	spawned = 0
 	active = true
 	active_changed.emit(true)
@@ -51,6 +55,11 @@ func _process(delta: float) -> void:
 			return
 	while spawned < mob_count and elapsed >= spawned * SPAWN_INTERVAL and not flag.is_defeated:
 		_spawn_rat(elapsed - spawned * SPAWN_INTERVAL)
+	if active and not flag.is_defeated:
+		income_elapsed += delta
+		while income_elapsed >= INCOME_INTERVAL:
+			income_elapsed -= INCOME_INTERVAL
+			Economy.add_beans(INCOME_AMOUNT)
 
 
 func _spawn_rat(age: float) -> void:

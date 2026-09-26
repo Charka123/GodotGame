@@ -36,6 +36,12 @@ custom_minimum_size = Vector2(140, 34)
 layout_mode = 2
 text = "Remove Block"
 
+[node name="RemoveTower" type="Button" parent="PlacementMenu/Margin/Buttons"]
+visible = false
+custom_minimum_size = Vector2(140, 34)
+layout_mode = 2
+text = "Remove tower (+25 bean)"
+
 [node name="Cancel" type="Button" parent="PlacementMenu/Margin/Buttons"]
 custom_minimum_size = Vector2(140, 34)
 layout_mode = 2
