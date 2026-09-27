@@ -1,0 +1,41 @@
+## AI Citation ##
+Prompt 1: "Help me setup a 2D scene that is a 12 x 12 grid. There will a line crossing in the middle for enemies to move through. Right now, just set up the scene."
+Prompt 2: "Set up an economy system. Let's call it "bean", and draw a bean sprite. The game will start with 200. Don't do anything else."
+Prompt 3: "Now build this: Right click on a grid (also find a way to do that for those who use a controller) that is NOT the lane brings up a small menu for player to place the tower (draw a small sprite for that). So far don't implement any functionality for the tower yet."
+Prompt 4: "Now, add a small change so that placing a tower costs 50 bean. After the bean is run out, the button to place tower will become gray (not usable)."
+Prompt 5: "Now create a package selector at the top of the screen so that player can use a package on the tower (similar to PVZ's selecting plant to plant). Don't implement any functionality yet (I will tell you later)
+The first one: 
+Production (the sprite will be a package with a bean symbol): costs 0 bean."
+Prompt 6: "Now there is 3 more packages to make (again, don't do functionality yet):
+Attack (the sprite will be a package with a knife symbol): costs 50 bean.
+Freeze (the sprite will be a package with a ice symbol): costs 100 bean
+Block (the sprite will be a package with prohibitory sign): costs 25 bean."
+Prompt 7: "The way a package will work:
+The rule is that when you use a package, it will keep passing the package to the right until it hit a tower with "block" or there is no tower to the immediate right. When the package is passing, it doesn't do anything. It only does its function when it stop passing (e.g. reaching the tower with block or no tower to the immediate right)
+The functionality for Production package is to produce 100 bean. Implement the functionality based on the way packages work in general."
+Prompt 8: "It seems like the Block package isn't working as what I intended. I decided that "block" package should just apply on the tower you use it on. Don't do the package passing for this particular package."
+Prompt 9: "Now, implement a 15 second cooldown for Production and Block packages."
+Prompt 10: "Now, implement a minor UI change. When you don't have enough bean. The corresponding package select zone on the selector should turn something like gray."
+Prompt 11: "Now, implement a button intended for spawning one wave of mobs. Don't implement any mobs or waves mechanics yet. I also intend in the future so that after you defeat a wave of mob you can trigger the next wave by pressing the button again."
+Prompt 12: "Implement a flag (create a sprite for this) at the right most end of the middle lane. If 10 mobs get through, the player lose. Don't implement any mobs yet."
+Prompt 13: "Update the counter so that it is in the format of a single number. This number indicates how many more losses can the player have. For example, "9" means the player can have 9 more misses."
+Prompt 14: "Create first wave of mobs. Player can trigger this wave by clicking the wave button.
+The first wave of mobs consists of 5 basic mob (sprite is a rat). This mob has a health of 25. The movement speed is 1 block per 3 seconds. For the first wave, each mob is 0.5 block apart and should move into the screen from left to right. 
+Now, also implement the functionality for the attack package. The attack page deal 20 damage for all mobs that is in the same column as the tower and 10 damage for the mobs in the adjacent 2 columns."
+Prompt 15: "Now, implement this change: player can only use a package when a wave is in progress. However, they can still place a tower when a wave is not in progress."
+Prompt 16: "Now, implement the following 2 things:
+Add for 5 second cooldown for attack package.
+Functionality for freeze package: it will still use the pass on mechanic. It will freeze all mobs for 8 seconds. It has a 20 seconds cooldown."
+Prompt 17: "Now implement a second wave. It consists of 7 rats (same rats). After the first wave, the second wave does not automatically start and so does for any waves in the future."
+Prompt 18: "Now implement a tool to allow user to remove "block" from any tower."
+Prompt 19: "Actually change the implementation of it. Instead of having a separate button, it would embedded in the right click menu of a tower that has block."
+Prompt 20: "Add a new mechanic: player gain 25 bean every 15 seconds during an active wave. So this reduces the difficulty a little bit."
+Prompt 21: "For the right click menu of a tower, add an option to remove the tower. Player get 25 bean back."
+Prompt 22: "Implement a wave 3: Wave 3 has a new faster rat (implement a sprite for that). The faster rat has 15 health but moves 1 block per 2 seconds. 
+The wave 3 has 3 regular rats followed by 2 faster rats. Each rat is 0.5 block apart when spawning (the faster rat will catch up to regular rat)."
+Prompt 23: "Implement a wave 4. Wave 4 has a new tougher rat (implement a sprite for that). The tougher rat has 40 health but moves 1 block per 4 seconds. 
+The wave 4 has 5 regular rats followed by 2 tougher rats. Each rat is 0.5 block apart when spawning."
+Prompt 24: "Implement a wave 5. Wave 5 has 4 regular rats followed by 3 faster rats then 3 tougher rats."
+Prompt 25: "Now implement 2 screens. After you reach 10 misses for the flag (as we defined earlier), send to a game over screen and allow the player to restart. 
+After the user completes 5 waves (wave 5 is the final wave), send player to a "win" screen and indicate the number of misses the player had."
+Generated with Codex from 09-19-2026 to 09-26-2026
