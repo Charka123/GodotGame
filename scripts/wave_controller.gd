@@ -95,7 +95,7 @@ func _on_mob_resolved(escaped: bool) -> void:
 		if wave_number < WAVES.size() and not flag.is_defeated:
 			button.disabled = false
 			button.text = "Start Wave %d [N / Start]" % (wave_number + 1)
-			button.tooltip_text = "Start wave %d: %d rats. N / controller Start." % [wave_number + 1, WAVES[wave_number].size()]
+			button.tooltip_text = "Start wave. N / controller Start." % [wave_number + 1, WAVES[wave_number].size()]
 		else:
 			button.disabled = true
 			button.text = "Wave %d complete" % wave_number
